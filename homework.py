@@ -35,7 +35,7 @@ class Training:
     duration: float
     weight: float
 
-    M_IN_KM: int = 1000
+    M_IN_KM: float = 1000.0
     LEN_STEP: float = 0.65
     HOURS_IN_MIN: int = 60
 
@@ -82,6 +82,9 @@ class SportsWalking(Training):
     """Training: sports walking."""
 
     SM_IN_M: int = 100
+    CALORIES_MEAN_SPEED_MULTIPLIER: float = 0.035
+    CALORIES_MEAN_SPEED_SHIFT: float = 0.029
+    KM_H_IN_M_S: float = 0.278
 
     def __init__(
             self, action: int, duration: float, weight: float, height: float
@@ -89,13 +92,8 @@ class SportsWalking(Training):
         super().__init__(action, duration, weight)
         self.height = height
 
-    CALORIES_MEAN_SPEED_MULTIPLIER: float = 0.035
-    CALORIES_MEAN_SPEED_SHIFT: float = 0.029
-    KM_H_IN_M_S: float = 0.278
-
     def get_spent_calories(self) -> float:
         """Count the number of calories consumed while sport walking."""
-
         mean_speed: float = super().get_mean_speed() * self.KM_H_IN_M_S
 
         return ((self.CALORIES_MEAN_SPEED_MULTIPLIER
@@ -112,6 +110,10 @@ class SportsWalking(Training):
 class Swimming(Training):
     """Training: swimming."""
 
+    SPEED_SHAFFLE: float = 1.1
+    SPEED_MULTIPLIER: int = 2
+    LEN_STEP: float = 1.38
+
     def __init__(
             self, action: int,
             duration: float,
@@ -122,10 +124,6 @@ class Swimming(Training):
         super().__init__(action, duration, weight)
         self.length_pool = length_pool
         self.count_pool = count_pool
-
-    SPEED_SHAFFLE: float = 1.1
-    SPEED_MULTIPLIER: int = 2
-    LEN_STEP: float = 1.38
 
     def get_distance(self) -> float:
         len_step: float = 1.38
@@ -148,14 +146,16 @@ class Swimming(Training):
                 * self.duration)
 
 
-training_code: Dict[str, Type[Training]] = {'SWM': Swimming,
-                                            'RUN': Running,
-                                            'WLK': SportsWalking}
-
-
 def read_package(training_type: str, training_results: list) -> Training:
     """Read the data received from the sensors."""
-    return training_code[training_type](*training_results)
+
+    training_code: Dict[str, Type[Training]] = {'SWM': Swimming,
+                                                'RUN': Running,
+                                                'WLK': SportsWalking}
+    try:
+        return training_code[training_type](*training_results)
+    except Exception:
+        raise RuntimeError('unknown type of training')
 
 
 def main(workout: Training) -> None:
@@ -173,8 +173,5 @@ if __name__ == '__main__':
     ]
 
     for workout_type, data in packages:
-        if workout_type in training_code:
-            training: Training = read_package(workout_type, data)
-            main(training)
-        else:
-            print('unknown type of training')
+        training: Training = read_package(workout_type, data)
+        main(training)
