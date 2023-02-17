@@ -1,7 +1,6 @@
 """Fitness tracker module."""
 from dataclasses import dataclass
-from typing import Type
-from typing import Dict, List
+from typing import Type, Dict, List
 
 
 @dataclass
