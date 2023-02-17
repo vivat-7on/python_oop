@@ -1,6 +1,7 @@
 """Fitness tracker module."""
 from dataclasses import dataclass
-from typing import Dict, Type
+from typing import Type
+from typing import Dict, List
 
 
 @dataclass
@@ -146,7 +147,7 @@ class Swimming(Training):
                 * self.duration)
 
 
-def read_package(training_type: str, training_results: list[int]) -> Training:
+def read_package(training_type: str, training_results: List[int]) -> Training:
     """Read the data received from the sensors."""
 
     training_code: Dict[str, Type[Training]] = {'SWM': Swimming,
@@ -165,7 +166,7 @@ def main(workout: Training) -> None:
 
 
 if __name__ == '__main__':
-    packages: list[tuple] = [
+    packages: List[tuple] = [
         ('SWM', [720, 1, 80, 25, 40]),
         ('RUN', [15000, 1, 75]),
         ('WLK', [9000, 1, 75, 180])
