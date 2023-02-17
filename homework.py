@@ -21,11 +21,11 @@ class InfoMessage:
             'Ср. скорость: {:.3f} км/ч; '
             'Потрачено ккал: {:.3f}.'
         )
+
         return message.format(
             self.training_type, self.duration,
             self.distance, self.speed,
-            self.calories
-        )
+            self.calories)
 
 
 @dataclass
@@ -49,7 +49,7 @@ class Training:
 
     def get_spent_calories(self) -> float:
         """Get the number of calories consumed."""
-        raise NotImplementedError
+        raise NotImplementedError("Undefined function.")
 
     def show_training_info(self) -> InfoMessage:
         """Return an informational message about the completed workout."""
@@ -146,16 +146,15 @@ class Swimming(Training):
                 * self.duration)
 
 
-def read_package(training_type: str, training_results: list) -> Training:
+def read_package(training_type: str, training_results: list[int]) -> Training:
     """Read the data received from the sensors."""
 
     training_code: Dict[str, Type[Training]] = {'SWM': Swimming,
                                                 'RUN': Running,
                                                 'WLK': SportsWalking}
-    try:
-        return training_code[training_type](*training_results)
-    except Exception:
-        raise RuntimeError('unknown type of training')
+    if training_type not in training_code:
+        raise NotImplementedError("Undefined training type.")
+    return training_code[training_type](*training_results)
 
 
 def main(workout: Training) -> None:
