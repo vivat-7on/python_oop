@@ -123,8 +123,8 @@ class Swimming(Training):
         self.count_pool = count_pool
 
     def get_distance(self) -> float:
-        len_step: float = 1.38
         """Get the distance in km."""
+        len_step: float = 1.38
         return self.action * len_step / self.M_IN_KM
 
     def get_mean_speed(self):
@@ -171,7 +171,3 @@ if __name__ == '__main__':
     for workout_type, data in packages:
         training: Training = read_package(workout_type, data)
         main(training)
-
-
-sw = Swimming([720, 1, 80, 25, 40])
-print(sw)
