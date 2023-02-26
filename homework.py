@@ -1,6 +1,6 @@
 """Fitness tracker module."""
 from dataclasses import dataclass, asdict
-from typing import Type, Dict, List
+from typing import Type, Dict, List, ClassVar
 
 
 @dataclass
@@ -32,9 +32,9 @@ class Training:
     duration: float
     weight: float
 
-    M_IN_KM: float = 1000.0
-    LEN_STEP: float = 0.65
-    HOURS_IN_MIN: int = 60
+    M_IN_KM: ClassVar[float] = 1000.0
+    LEN_STEP: ClassVar[float] = 0.65
+    HOURS_IN_MIN: ClassVar[int] = 60
 
     def get_distance(self) -> float:
         """Get the distance in km."""
@@ -61,8 +61,8 @@ class Training:
 class Running(Training):
     """Training: running."""
 
-    CALORIES_MEAN_SPEED_MULTIPLIER: int = 18
-    CALORIES_MEAN_SPEED_SHIFT: float = 1.79
+    CALORIES_MEAN_SPEED_MULTIPLIER: ClassVar[int] = 18
+    CALORIES_MEAN_SPEED_SHIFT: ClassVar[float] = 1.79
 
     def get_spent_calories(self) -> float:
         """Count the number of calories consumed while running."""
@@ -78,10 +78,10 @@ class Running(Training):
 class SportsWalking(Training):
     """Training: sports walking."""
 
-    SM_IN_M: int = 100
-    CALORIES_MEAN_SPEED_MULTIPLIER: float = 0.035
-    CALORIES_MEAN_SPEED_SHIFT: float = 0.029
-    KM_H_IN_M_S: float = 0.278
+    SM_IN_M: ClassVar[int] = 100
+    CALORIES_MEAN_SPEED_MULTIPLIER: ClassVar[float] = 0.035
+    CALORIES_MEAN_SPEED_SHIFT: ClassVar[float] = 0.029
+    KM_H_IN_M_S: ClassVar[float] = 0.278
 
     def __init__(
             self, action: int, duration: float, weight: float, height: float
@@ -107,9 +107,10 @@ class SportsWalking(Training):
 class Swimming(Training):
     """Training: swimming."""
 
-    SPEED_SHAFFLE: float = 1.1
-    SPEED_MULTIPLIER: int = 2
-    LEN_STEP: float = 1.38
+    LEN_STEP: ClassVar[float] = 1.38
+    SPEED_SHAFFLE: ClassVar[float] = 1.1
+    SPEED_MULTIPLIER: ClassVar[int] = 2
+
 
     def __init__(
             self, action: int,
@@ -124,8 +125,7 @@ class Swimming(Training):
 
     def get_distance(self) -> float:
         """Get the distance in km."""
-        len_step: float = 1.38
-        return self.action * len_step / self.M_IN_KM
+        return self.action * self.LEN_STEP / self.M_IN_KM
 
     def get_mean_speed(self):
         """Get the average swimming speed."""
@@ -171,3 +171,4 @@ if __name__ == '__main__':
     for workout_type, data in packages:
         training: Training = read_package(workout_type, data)
         main(training)
+
