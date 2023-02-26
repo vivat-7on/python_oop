@@ -58,6 +58,7 @@ class Training:
         )
 
 
+@dataclass
 class Running(Training):
     """Training: running."""
 
@@ -75,6 +76,7 @@ class Running(Training):
                 * self.HOURS_IN_MIN)
 
 
+@dataclass
 class SportsWalking(Training):
     """Training: sports walking."""
 
@@ -83,11 +85,7 @@ class SportsWalking(Training):
     CALORIES_MEAN_SPEED_SHIFT: ClassVar[float] = 0.029
     KM_H_IN_M_S: ClassVar[float] = 0.278
 
-    def __init__(
-            self, action: int, duration: float, weight: float, height: float
-    ) -> None:
-        super().__init__(action, duration, weight)
-        self.height = height
+    height: float
 
     def get_spent_calories(self) -> float:
         """Count the number of calories consumed while sport walking."""
@@ -104,6 +102,7 @@ class SportsWalking(Training):
                    * self.HOURS_IN_MIN))
 
 
+@dataclass
 class Swimming(Training):
     """Training: swimming."""
 
@@ -111,17 +110,8 @@ class Swimming(Training):
     SPEED_SHAFFLE: ClassVar[float] = 1.1
     SPEED_MULTIPLIER: ClassVar[int] = 2
 
-
-    def __init__(
-            self, action: int,
-            duration: float,
-            weight: float,
-            length_pool: int,
-            count_pool: int
-    ) -> None:
-        super().__init__(action, duration, weight)
-        self.length_pool = length_pool
-        self.count_pool = count_pool
+    length_pool: int
+    count_pool: int
 
     def get_distance(self) -> float:
         """Get the distance in km."""
@@ -171,4 +161,3 @@ if __name__ == '__main__':
     for workout_type, data in packages:
         training: Training = read_package(workout_type, data)
         main(training)
-
